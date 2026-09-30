@@ -1,3 +1,5 @@
+
+
 import logging
 import sys
 import os
@@ -25,22 +27,14 @@ import re
 import hashlib
 import math
 import traceback
-from typing import Optional, Tuple, List
+from typing import Tuple, List
 
 
 
 
 
 def calculate_triangle(a_raw: str, b_raw: str, c_raw: str) -> Tuple[str, List[Tuple[int, int]]]:
-    """
-    Определяет вид треугольника по трём сторонам и возвращает координаты
-    вершин для отрисовки в поле 100x100 px.
 
-    Возвращает: (тип, [(x1,y1), (x2,y2), (x3,y3)])
-      - равносторонний / равнобедренный / разносторонний
-      - "" (пустая строка) + координаты (-2, -2) — нечисловые входные данные
-      - "не треугольник" + координаты (-1, -1) — числа некорректны
-    """
     try:
         sides = []
         for raw in (a_raw, b_raw, c_raw):
@@ -93,6 +87,9 @@ def calculate_triangle(a_raw: str, b_raw: str, c_raw: str) -> Tuple[str, List[Tu
         logging.exception("Traceback:")
         return "не треугольник", [(-1, -1)] * 3
 
+
+
+
 def demo_variant_1() -> None:
     logging.info("=== Демонстрация Варианта 1: треугольник ===")
     test_cases = [
@@ -108,7 +105,44 @@ def demo_variant_1() -> None:
         kind, coords = calculate_triangle(a, b, c)
         logging.info(f"Результат: тип='{kind}', координаты={coords}")
 
+
+def interactive_triangle() -> None:
+
+    logging.info("=== Интерактивный режим: треугольник (Вариант 1) ===")
+    print("Введите три стороны треугольника через пробел (например: 3 4 5).")
+    print("Для выхода введите: q / quit / exit или пустую строку.\n")
+
+    while True:
+        try:
+            user_input = input("Введите стороны A B C: ").strip()
+        except (EOFError, KeyboardInterrupt):
+            print("\nВвод прерван пользователем.")
+            logging.info("Интерактивный ввод прерван пользователем")
+            break
+
+        if user_input.lower() in ("q", "quit", "exit", ""):
+            logging.info("Пользователь завершил ввод (выход из цикла while)")
+            break
+
+        parts = user_input.split()
+        if len(parts) != 3:
+            print("Ошибка: нужно ввести ровно три значения через пробел.\n")
+            logging.warning(f"Неверное количество аргументов: {len(parts)} (ожидалось 3)")
+            continue
+
+        a_raw, b_raw, c_raw = parts
+        logging.info(f"Запрос: A={a_raw!r}, B={b_raw!r}, C={c_raw!r}")
+        kind, coords = calculate_triangle(a_raw, b_raw, c_raw)
+
+        if kind == "":
+            print("Результат: введены нечисловые данные, координаты сброшены в (-2, -2)\n")
+        elif kind == "не треугольник":
+            print("Результат: не треугольник, координаты сброшены в (-1, -1)\n")
+        else:
+            print(f"Результат: треугольник {kind}, вершины: {coords}\n")
+        logging.info(f"Результат: тип='{kind}', координаты={coords}")
+
+
 if __name__ == "__main__":
-    demo_variant_1()
-    print()
+    interactive_triangle()
     logging.info("Приложение завершено")
