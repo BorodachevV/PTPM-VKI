@@ -51,7 +51,8 @@ def calculate_triangle(a_raw: str, b_raw: str, c_raw: str) -> Tuple[str, List[Tu
             return "не треугольник", [(-1, -1)] * 3
 
         # Неравенство треугольника
-        if a + b <= c or a + c <= b or b + c <= a:
+        tol = 1e-9 * max(a, b, c)   
+        if a + b <= c + tol or a + c <= b + tol or b + c <= a + tol:
             logging.warning(f"Нарушено неравенство треугольника: {a}, {b}, {c}")
             return "не треугольник", [(-1, -1)] * 3
 
