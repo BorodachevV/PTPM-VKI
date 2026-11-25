@@ -61,6 +61,12 @@ class TestConverter(unittest.TestCase):
         for x in [100.7, 65.7, -0.1, -30.5]:
             with self.subTest(x=x):
                 self.assertIsInstance(Converter.do(x), int)
+    
+    def test_gap_between_ranges_raises_value_error(self):
+        # -30.45 не попадает ни в [-30.4; 0), ни в (-inf; -30.5]
+        # Это проверяет ветку else для if x <= -30.5 и строку 21
+            with self.assertRaises(ValueError):
+                Converter.do(-30.45)
 
 
 if __name__ == "__main__":
